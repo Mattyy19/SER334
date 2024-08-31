@@ -22,6 +22,8 @@ int main()
     scanf("%d", &input);
 
     termination(input);
+
+    return 0;
 }
 
 void termination(int input)

@@ -42,7 +42,7 @@ int main(void)
 
 		volume = M_PI * (radius * radius) * height;
 
-		sumVolume += volume;
+		sumVolume = sumVolume + volume;
 	}
 
 	//Display the total volume sum back to the user. Make sure to use the right control
