@@ -99,16 +99,16 @@ void branching(char option) {
 		printf("\nHow many credits is the class? (e.g. 3):");
 		scanf("%d", &courseCreds);
 		printf("\nWhat is the name of the professor?:");
-		scanf("%s", &teacher);
+		scanf("%s", teacher);
 		course_insert(subjectNum, courseNum, courseCreds, teacher);
 		break;
 
 	case 'd':
-		schedule_print();
+		//TODO
 		break;
 
 	case 's':
-		//TODO
+		schedule_print();
 		break;
 
 	case 'q':
@@ -153,30 +153,40 @@ void course_insert(int subjectNum, int courseNum, int courseCreds, char* teacher
 	else
 	{
 		struct CourseNode* iter = course_collection;
-
 		//Adds newNode in sorted order
 		while(iter != NULL)
 		{
 			if(newNode->subject <= iter->subject && newNode->number < iter->number)
 			{
-				newNode->prev = iter->prev;
-				newNode->next = iter;
-				if(iter->prev != NULL)
+				//If insert is at the head
+				if(iter->prev == NULL)
 				{
-					iter->prev->next = newNode;
-				}
-				else
-				{
-					//If newNode is inserted as head
+					newNode->next = iter;
+					iter->prev = newNode;
 					course_collection = newNode;
+					free(newNode);
+					return;
 				}
-				iter->prev = newNode;
+
+				newNode->prev = iter;
+				newNode->next = iter->next;
+				iter->next = newNode;
+
+				//If newNode is not the tail
+				if(newNode->next != NULL)
+				{
+					newNode->next->prev = newNode;
+					free(newNode);
+					return;
+				}
 			}
 			iter = iter->next;
 		}
-	}
 
-	free(newNode);
+		iter->next = newNode;
+		newNode->prev = iter;
+		free(newNode);
+	}
 }
 
 //Displays all courses in course_collection
@@ -191,12 +201,16 @@ void schedule_print()
 		{
 		case 0:
 			printf("CSE%d %d %s\n", iter->number, iter->credits, iter->teachers);
+			break;
 		case 1:
 			printf("EEE%d %d %s\n", iter->number, iter->credits, iter->teachers);
+			break;
 		case 2:
 			printf("EGR%d %d %s\n", iter->number, iter->credits, iter->teachers);
+			break;
 		case 3:
 			printf("SER%d %d %s\n", iter->number, iter->credits, iter->teachers);
+			break;
 		}
 		iter = iter->next;
 	}
