@@ -21,10 +21,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 //DATA STRUCTURES
 
-enum {CSE = 0, EEE = 1, EGR = 2, SER = 3} Subjects;
+typedef enum {CSE = 0, EEE = 1, EGR = 2, SER = 3} Subjects;
 struct CourseNode
 {
-	enum Subjects subject;
+	Subjects subject;
 	int number;
 	char teachers[MAX_LEN];
 	int credits;
@@ -89,7 +89,7 @@ void branching(char option) {
 		int subjectNum;
 		int courseNum;
 		int courseCreds;
-		char teacher[];
+		char teacher[MAX_LEN];
 
 		//Gets course information from user
 		printf("\nWhat is the subject? (CSE = 0, EEE = 1, EGR = 2, SER = 3):");
@@ -104,7 +104,7 @@ void branching(char option) {
 		break;
 
 	case 'd':
-		//TODO
+		schedule_print();
 		break;
 
 	case 's':
@@ -122,6 +122,7 @@ void branching(char option) {
 
 }
 
+//Inserts course into course_collection based on input
 void course_insert(int subjectNum, int courseNum, int courseCreds, char* teacher) {
 	//check if course is already in list
 	struct CourseNode* tempList = course_collection;
@@ -142,6 +143,7 @@ void course_insert(int subjectNum, int courseNum, int courseCreds, char* teacher
 	newNode->credits = courseCreds;
 	strcpy(newNode->teachers, teacher);
 	newNode->next = NULL;
+	newNode->prev = NULL;
 
 	//If course_collection is empty
 	if(course_collection == NULL)
@@ -151,8 +153,8 @@ void course_insert(int subjectNum, int courseNum, int courseCreds, char* teacher
 	else
 	{
 		struct CourseNode* iter = course_collection;
-		struct CourseNode* prevNode = NULL;
 
+		//Adds newNode in sorted order
 		while(iter != NULL)
 		{
 			if(newNode->subject <= iter->subject && newNode->number < iter->number)
@@ -165,6 +167,7 @@ void course_insert(int subjectNum, int courseNum, int courseCreds, char* teacher
 				}
 				else
 				{
+					//If newNode is inserted as head
 					course_collection = newNode;
 				}
 				iter->prev = newNode;
@@ -174,4 +177,27 @@ void course_insert(int subjectNum, int courseNum, int courseCreds, char* teacher
 	}
 
 	free(newNode);
+}
+
+//Displays all courses in course_collection
+void schedule_print()
+{
+	printf("Class Schedule:\n");
+	struct CourseNode* iter = course_collection;
+
+	while(iter != NULL)
+	{
+		switch(iter->subject)
+		{
+		case 0:
+			printf("CSE%d %d %s\n", iter->number, iter->credits, iter->teachers);
+		case 1:
+			printf("EEE%d %d %s\n", iter->number, iter->credits, iter->teachers);
+		case 2:
+			printf("EGR%d %d %s\n", iter->number, iter->credits, iter->teachers);
+		case 3:
+			printf("SER%d %d %s\n", iter->number, iter->credits, iter->teachers);
+		}
+		iter = iter->next;
+	}
 }
