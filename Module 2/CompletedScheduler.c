@@ -374,5 +374,4 @@ void schedule_save()
 	}
 
 	fclose(file);
-}(file);
 }
