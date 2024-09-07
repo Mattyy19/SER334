@@ -1,7 +1,7 @@
 /**
 * This program manages a set of courses a student is taking.
 *
-* Completion time: (estimation of hours spent on this program)
+* Completion time: 6 hours
 *
 * @author Matthew Nguyen
 * @version 1.0
@@ -273,11 +273,49 @@ void course_drop(char* subjectRem, int courseNumRem)
 //Loads schedule from data.txt file
 void schedule_load()
 {
+	//Tries to open data.txt
+	FILE* file = fopen("data.txt", "rb");
 
+	//If file does not exist
+	if(file == NULL)
+	{
+		return;
+	}
+
+	char data[MAX_LEN];
+
+	while(fgets(data, MAX_LEN, file) != NULL)
+	{
+		int subject, courseNum, credits;
+		char teacher[MAX_LEN];
+
+		//Gets line of course
+		scanf(data, "%d,%d,%d,%s", &subject, &courseNum, &credits, teacher);
+		//Adds to course_collection
+		course_insert(subject, courseNum, credits, teacher);
+	}
+
+	fclose(file);
 }
 
 //Saves schedule to data.txt file
 void schedule_save()
 {
+	//Tries to open data.txt
+	FILE* file = fopen("data.txt", "wb");
 
+	//If file does not exist
+	if(file == NULL)
+	{
+		return;
+	}
+
+	//Writes to data.txt
+	struct CourseNode* iter = course_collection;
+	while(iter != NULL)
+	{
+		fprintf(file, "%d,%d,%d,%s\n", iter->subject, iter->number, iter->credits, iter->teachers);
+	}
+
+	fclose(file);
 }
