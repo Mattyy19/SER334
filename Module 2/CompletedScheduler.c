@@ -22,22 +22,22 @@
 //DATA STRUCTURES
 
 typedef enum {CSE = 0, EEE = 1, EGR = 2, SER = 3} Subjects;
-struct CourseNode
+struct courseNode
 {
 	Subjects subject;
 	int number;
 	char teachers[MAX_LEN];
 	int credits;
 
-	struct CourseNode* next;
-	struct CourseNode* prev;
+	struct courseNode* next;
+	struct courseNode* prev;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 //GLOBAL VARIABLES
 
 //place to store course information
-struct CourseNode* course_collection = NULL;
+struct courseNode* course_collection = NULL;
 
 ////////////////////////////////////////////////////////////////////////////////
 //FORWARD DECLARATIONS
@@ -125,7 +125,7 @@ void branching(char option) {
 //Inserts course into course_collection based on input
 void course_insert(int subjectNum, int courseNum, int courseCreds, char* teacher) {
 	//check if course is already in list
-	struct CourseNode* tempList = course_collection;
+	struct courseNode* tempList = course_collection;
 	while(tempList != NULL)
 	{
 		if(tempList->subject == subjectNum && tempList->number == courseNum)
@@ -136,8 +136,8 @@ void course_insert(int subjectNum, int courseNum, int courseCreds, char* teacher
 		tempList = tempList->next;
 	}
 
-	//creates new CourseNode to add to list
-	struct CourseNode* newNode = (struct CourseNode*)malloc(sizeof(struct CourseNode));
+	//creates new courseNode to add to list
+	struct courseNode* newNode = (struct courseNode*)malloc(sizeof(struct courseNode));
 	newNode->subject = subjectNum;
 	newNode->number = courseNum;
 	newNode->credits = courseCreds;
@@ -152,7 +152,7 @@ void course_insert(int subjectNum, int courseNum, int courseCreds, char* teacher
 	}
 	else
 	{
-		struct CourseNode* iter = course_collection;
+		struct courseNode* iter = course_collection;
 
 		//If insertion is at the head
 		if(newNode->subject < iter->subject || (newNode->subject == iter->subject && newNode->number < iter->number))
@@ -188,7 +188,7 @@ void course_insert(int subjectNum, int courseNum, int courseCreds, char* teacher
 void schedule_print()
 {
 	printf("Class Schedule:\n");
-	struct CourseNode* iter = course_collection;
+	struct courseNode* iter = course_collection;
 
 	while(iter != NULL)
 	{
@@ -236,7 +236,7 @@ void course_drop(char* subjectRem, int courseNumRem)
 	}
 
 	//Traverses through list to find course to remove
-	struct CourseNode* iter = course_collection;
+	struct courseNode* iter = course_collection;
 	while(iter != NULL)
 	{
 		if(iter->subject == subjectNum && iter->number == courseNumRem)
@@ -311,10 +311,11 @@ void schedule_save()
 	}
 
 	//Writes to data.txt
-	struct CourseNode* iter = course_collection;
+	struct courseNode* iter = course_collection;
 	while(iter != NULL)
 	{
 		fprintf(file, "%d,%d,%d,%s\n", iter->subject, iter->number, iter->credits, iter->teachers);
+		iter = iter->next;
 	}
 
 	fclose(file);
