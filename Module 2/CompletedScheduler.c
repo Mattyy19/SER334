@@ -111,7 +111,14 @@ void branching(char option) {
 		break;
 
 	case 'd':
-		//TODO
+		char subjectRem[MAX_LEN];
+		int courseRem;
+
+		printf("\nWhat is the subject?:");
+		scanf("%s", subjectRem);
+		printf("\nWhat is the course number? (e.g. 334):");
+		scanf("%d", &courseRem);
+		course_drop(subjectRem, courseRem);
 		break;
 
 	case 's':
