@@ -210,3 +210,74 @@ void schedule_print()
 		iter = iter->next;
 	}
 }
+
+//Removes specified course from course_collection
+void course_drop(char* subjectRem, int courseNumRem)
+{
+	int subjectNum;
+	int contains = 0;
+
+	//Changes user input into int
+	if(strcmp(subjectRem, "CSE") == 0)
+	{
+		subjectNum = 0;
+	}
+	else if(strcmp(subjectRem, "EEE") == 0)
+	{
+		subjectNum = 1;
+	}
+	else if(strcmp(subjectRem, "EGR") == 0)
+	{
+		subjectNum = 2;
+	}
+	else if(strcmp(subjectRem, "SER") == 0)
+	{
+		subjectNum = 3;
+	}
+
+	//Traverses through list to find course to remove
+	struct CourseNode* iter = course_collection;
+	while(iter != NULL)
+	{
+		if(iter->subject == subjectNum && iter->number == courseNumRem)
+		{
+			//If course is the head
+			if(iter->prev == NULL)
+			{
+				course_collection = iter->next;
+			}
+			//If course is the tail
+			else if(iter->next == NULL)
+			{
+				iter->prev->next = NULL;
+			}
+			else
+			{
+				iter->prev->next = iter->next;
+				iter->next->prev = iter->prev;
+			}
+
+			contains = 1;
+		}
+
+		iter = iter->next;
+	}
+
+	free(iter);
+	if(contains == 0)
+	{
+		printf("This course does not exist in the schedule");
+	}
+}
+
+//Loads schedule from data.txt file
+void schedule_load()
+{
+
+}
+
+//Saves schedule to data.txt file
+void schedule_save()
+{
+
+}
