@@ -1,7 +1,7 @@
 /**
 * This program manages a set of courses a student is taking.
 *
-* Completion time: 6 hours
+* Completion time: 7 hours
 *
 * @author Matthew Nguyen
 * @version 1.0
