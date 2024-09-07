@@ -153,39 +153,34 @@ void course_insert(int subjectNum, int courseNum, int courseCreds, char* teacher
 	else
 	{
 		struct CourseNode* iter = course_collection;
-		//Adds newNode in sorted order
-		while(iter != NULL)
+
+		//If insertion is at the head
+		if(newNode->subject < iter->subject || (newNode->subject == iter->subject && newNode->number < iter->number))
 		{
-			if(newNode->subject <= iter->subject && newNode->number < iter->number)
+			newNode->next = course_collection;
+			course_collection->prev = newNode;
+			course_collection = newNode;
+			return;
+		}
+
+		//Insert newNode in sorted order
+		while(iter->next != NULL)
+		{
+			if(newNode->subject < iter->subject ||
+				(newNode->subject == iter->subject && newNode->number < iter->number))
 			{
-				//If insert is at the head
-				if(iter->prev == NULL)
-				{
-					newNode->next = iter;
-					iter->prev = newNode;
-					course_collection = newNode;
-					free(newNode);
-					return;
-				}
-
-				newNode->prev = iter;
-				newNode->next = iter->next;
-				iter->next = newNode;
-
-				//If newNode is not the tail
-				if(newNode->next != NULL)
-				{
-					newNode->next->prev = newNode;
-					free(newNode);
-					return;
-				}
+				newNode->prev = iter->prev;
+				newNode->next = iter;
+				iter->prev->next = newNode;
+				iter->prev = newNode;
+				return;
 			}
 			iter = iter->next;
 		}
 
+		//If insert is at the tail
 		iter->next = newNode;
 		newNode->prev = iter;
-		free(newNode);
 	}
 }
 
