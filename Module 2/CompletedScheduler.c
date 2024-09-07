@@ -38,6 +38,7 @@ struct courseNode
 
 //place to store course information
 struct courseNode* course_collection = NULL;
+int totalCredits = 0;
 
 ////////////////////////////////////////////////////////////////////////////////
 //FORWARD DECLARATIONS
@@ -48,8 +49,6 @@ void course_drop();
 void schedule_load();
 void schedule_save();
 
-//main entry point. Starts the program by displaying a welcome and beginning an 
-//input loop that displays a menu and processes user input. Pressing q quits.      
 int main() {
 	char input_buffer;
 
@@ -59,22 +58,13 @@ int main() {
 
 	//menu and input loop
 	do {
-		//Gets total credits
-		int totalCredits = 0;
-		struct courseNode* iter = course_collection;
-		while(iter != NULL)
-		{
-			totalCredits = totalCredits + iter->credits;
-			iter = iter->next;
-		}
-
 		printf("\nMenu Options\n");
 		printf("------------------------------------------------------\n");
 		printf("a: Add a class\n");
 		printf("d: Drop a class\n");
 		printf("s: Show your classes\n");
 		printf("q: Quit\n");
-		//printf("\nTotal Credits: %d\n\n", TODO);
+		printf("\nTotal Credits: %d\n\n", totalCredits);
 		printf("Please enter a choice ---> ");
 
 		scanf(" %c", &input_buffer);
@@ -114,6 +104,7 @@ void branching(char option) {
 		char subjectRem[MAX_LEN];
 		int courseRem;
 
+		//Gets course information from user
 		printf("\nWhat is the subject?:");
 		scanf("%s", subjectRem);
 		printf("\nWhat is the course number? (e.g. 334):");
@@ -155,6 +146,7 @@ void course_insert(int subjectNum, int courseNum, int courseCreds, char* teacher
 	newNode->subject = subjectNum;
 	newNode->number = courseNum;
 	newNode->credits = courseCreds;
+	totalCredits = totalCredits + courseCreds;
 	strcpy(newNode->teachers, teacher);
 	newNode->next = NULL;
 	newNode->prev = NULL;
@@ -190,6 +182,17 @@ void course_insert(int subjectNum, int courseNum, int courseCreds, char* teacher
 				return;
 			}
 			iter = iter->next;
+		}
+
+		//If insert is before the tail
+		if(newNode->subject < iter->subject ||
+				(newNode->subject == iter->subject && newNode->number < iter->number))
+		{
+			newNode->prev = iter->prev;
+			newNode->next = iter;
+			iter->prev->next = newNode;
+			iter->prev = newNode;
+			return;
 		}
 
 		//If insert is at the tail
@@ -229,7 +232,6 @@ void schedule_print()
 void course_drop(char* subjectRem, int courseNumRem)
 {
 	int subjectNum;
-	int contains = 0;
 
 	//Changes user input into int
 	if(strcmp(subjectRem, "CSE") == 0)
@@ -255,33 +257,44 @@ void course_drop(char* subjectRem, int courseNumRem)
 	{
 		if(iter->subject == subjectNum && iter->number == courseNumRem)
 		{
+			//Only node in list
+			if(iter->next == NULL && iter->prev == NULL)
+			{
+				course_collection = NULL;
+				totalCredits = totalCredits - iter->credits;
+				free(iter);
+				return;
+			}
 			//If course is the head
 			if(iter->prev == NULL)
 			{
 				course_collection = iter->next;
+				course_collection->prev = NULL;
+				totalCredits = totalCredits - iter->credits;
+				free(iter);
+				return;
 			}
 			//If course is the tail
-			else if(iter->next == NULL)
+			if(iter->next == NULL)
 			{
 				iter->prev->next = NULL;
-			}
-			else
-			{
-				iter->prev->next = iter->next;
-				iter->next->prev = iter->prev;
+				totalCredits = totalCredits - iter->credits;
+				free(iter);
+				return;
 			}
 
-			contains = 1;
+			iter->prev->next = iter->next;
+			iter->next->prev = iter->prev;
+			totalCredits = totalCredits + iter->credits;
+			free(iter);
+			return;
 		}
 
 		iter = iter->next;
 	}
 
-	free(iter);
-	if(contains == 0)
-	{
-		printf("This course does not exist in the schedule");
-	}
+	printf("This course does not exist in the schedule");
+
 }
 
 //Loads schedule from data.txt file
@@ -309,18 +322,6 @@ void schedule_load()
 		{
 			data[length-1] = '\0';
 		}
-
-		//Gets line of course
-		scanf(data, "%d,%d,%d,%s", &subject, &courseNum, &credits, teacher);
-		//Adds to course_collection
-		course_insert(subject, courseNum, credits, teacher);
-	}
-
-	while(fgets(data, MAX_LEN, file) != NULL)
-	{
-		int subject, courseNum, credits;
-		char teacher[MAX_LEN];
-
 		//Gets line of course
 		scanf(data, "%d,%d,%d,%s", &subject, &courseNum, &credits, teacher);
 		//Adds to course_collection
@@ -343,34 +344,11 @@ void schedule_save()
 	}
 
 	//Writes to data.txt
-	while(course_collection != NULL)
+	struct courseNode* iter = course_collection;
+	while(iter != NULL)
 	{
-		fprintf(file, "%d,%d,%d,%s\n", course_collection->subject, course_collection->number,
-			course_collection->credits, course_collection->teachers);
-
-		//Deallocates nodes
-		if(course_collection->subject == 0)
-		{
-			char subject[MAX_LEN] = "CSE";
-			course_drop(subject, course_collection->number);
-		}
-		else if(course_collection->subject == 1)
-		{
-			char subject[MAX_LEN] = "EEE";
-			course_drop(subject, course_collection->number);
-		}
-		else if(course_collection->subject == 2)
-		{
-			char subject[MAX_LEN] = "EGR";
-			course_drop(subject, course_collection->number);
-		}
-		else if(course_collection->subject == 3)
-		{
-			char subject[MAX_LEN] = "SER";
-			course_drop(subject, course_collection->number);
-		}
-
-		course_collection = course_collection->next;
+		fprintf(file, "%d,%d,%d,%s\n", iter->subject, iter->number, iter->credits, iter->teachers);
+		iter = iter->next;
 	}
 
 	fclose(file);
