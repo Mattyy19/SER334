@@ -55,11 +55,19 @@ int main() {
 
 	printf("\n\nWelcome to ASU Class Schedule\n");
 
-	//TODO: stuff goes here...
 	schedule_load();
 
 	//menu and input loop
 	do {
+		//Gets total credits
+		int totalCredits = 0;
+		struct courseNode* iter = course_collection;
+		while(iter != NULL)
+		{
+			totalCredits = totalCredits + iter->credits;
+			iter = iter->next;
+		}
+
 		printf("\nMenu Options\n");
 		printf("------------------------------------------------------\n");
 		printf("a: Add a class\n");
@@ -74,7 +82,6 @@ int main() {
 		branching(input_buffer);
 	} while (input_buffer != 'q');
 
-	//TODO: stuff goes here...
 	schedule_save();
 
 	return 0;
@@ -289,6 +296,24 @@ void schedule_load()
 		int subject, courseNum, credits;
 		char teacher[MAX_LEN];
 
+		//Removes \n at at of string
+		size_t length = strlen(data);
+		if(length > 0 && data[length-1] == '\n')
+		{
+			data[length-1] = '\0';
+		}
+
+		//Gets line of course
+		scanf(data, "%d,%d,%d,%s", &subject, &courseNum, &credits, teacher);
+		//Adds to course_collection
+		course_insert(subject, courseNum, credits, teacher);
+	}
+
+	while(fgets(data, MAX_LEN, file) != NULL)
+	{
+		int subject, courseNum, credits;
+		char teacher[MAX_LEN];
+
 		//Gets line of course
 		scanf(data, "%d,%d,%d,%s", &subject, &courseNum, &credits, teacher);
 		//Adds to course_collection
@@ -311,11 +336,34 @@ void schedule_save()
 	}
 
 	//Writes to data.txt
-	struct courseNode* iter = course_collection;
-	while(iter != NULL)
+	while(course_collection != NULL)
 	{
-		fprintf(file, "%d,%d,%d,%s\n", iter->subject, iter->number, iter->credits, iter->teachers);
-		iter = iter->next;
+		fprintf(file, "%d,%d,%d,%s\n", course_collection->subject, course_collection->number,
+			course_collection->credits, course_collection->teachers);
+
+		//Deallocates nodes
+		if(course_collection->subject == 0)
+		{
+			char subject[MAX_LEN] = "CSE";
+			course_drop(subject, course_collection->number);
+		}
+		else if(course_collection->subject == 1)
+		{
+			char subject[MAX_LEN] = "EEE";
+			course_drop(subject, course_collection->number);
+		}
+		else if(course_collection->subject == 2)
+		{
+			char subject[MAX_LEN] = "EGR";
+			course_drop(subject, course_collection->number);
+		}
+		else if(course_collection->subject == 3)
+		{
+			char subject[MAX_LEN] = "SER";
+			course_drop(subject, course_collection->number);
+		}
+
+		course_collection = course_collection->next;
 	}
 
 	fclose(file);
