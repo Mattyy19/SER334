@@ -348,8 +348,31 @@ void schedule_save()
 	while(iter != NULL)
 	{
 		fprintf(file, "%d,%d,%d,%s\n", iter->subject, iter->number, iter->credits, iter->teachers);
+		//Deallocates nodes
+		if(iter->subject == 0)
+		{
+			char subject[MAX_LEN] = "CSE";
+			course_drop(subject, iter->number);
+		}
+		else if(iter->subject == 1)
+		{
+			char subject[MAX_LEN] = "EEE";
+			course_drop(subject, iter->number);
+		}
+		else if(iter->subject == 2)
+		{
+			char subject[MAX_LEN] = "EGR";
+			course_drop(subject, iter->number);
+		}
+		else if(iter->subject == 3)
+		{
+			char subject[MAX_LEN] = "SER";
+			course_drop(subject, iter->number);
+		}
+
 		iter = iter->next;
 	}
 
 	fclose(file);
+}(file);
 }
