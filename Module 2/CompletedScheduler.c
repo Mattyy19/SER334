@@ -1,7 +1,7 @@
 /**
 * This program manages a set of courses a student is taking.
 *
-* Completion time: 7 hours
+* Completion time: 9 hours
 *
 * @author Matthew Nguyen
 * @version 1.0
@@ -46,7 +46,7 @@ int totalCredits = 0;
 void branching(char option);
 void course_insert(int subjectNum, int courseNum, int courseCreds, char* teacher);
 void schedule_print();
-void course_drop(char* subjectRem, int courseNumRem);
+void course_drop(int subjectRem, int courseNumRem);
 void schedule_load();
 void schedule_save();
 
@@ -102,12 +102,12 @@ void branching(char option) {
 		break;
 
 	case 'd':
-		char subjectRem[MAX_LEN];
+		int subjectRem;
 		int courseRem;
 
 		//Gets course information from user
-		printf("\nWhat is the subject?:");
-		scanf("%s", subjectRem);
+		printf("\nWhat is the subject? (CSE = 0, EEE = 1, EGR = 2, SER = 3):");
+		scanf("%d", &subjectRem);
 		printf("\nWhat is the course number? (e.g. 334):");
 		scanf("%d", &courseRem);
 		course_drop(subjectRem, courseRem);
@@ -230,28 +230,8 @@ void schedule_print()
 }
 
 //Removes specified course from course_collection
-void course_drop(char* subjectRem, int courseNumRem)
+void course_drop(int subjectNum, int courseNumRem)
 {
-	int subjectNum;
-
-	//Changes user input into int
-	if(strcmp(subjectRem, "CSE") == 0)
-	{
-		subjectNum = 0;
-	}
-	else if(strcmp(subjectRem, "EEE") == 0)
-	{
-		subjectNum = 1;
-	}
-	else if(strcmp(subjectRem, "EGR") == 0)
-	{
-		subjectNum = 2;
-	}
-	else if(strcmp(subjectRem, "SER") == 0)
-	{
-		subjectNum = 3;
-	}
-
 	//Traverses through list to find course to remove
 	struct courseNode* iter = course_collection;
 	while(iter != NULL)
@@ -264,7 +244,7 @@ void course_drop(char* subjectRem, int courseNumRem)
 				course_collection = NULL;
 				totalCredits = totalCredits - iter->credits;
 				free(iter);
-
+				iter = NULL;
 				return;
 			}
 			//If course is the head
@@ -274,6 +254,7 @@ void course_drop(char* subjectRem, int courseNumRem)
 				course_collection->prev = NULL;
 				totalCredits = totalCredits - iter->credits;
 				free(iter);
+				iter = NULL;
 				return;
 			}
 			//If course is the tail
@@ -282,13 +263,15 @@ void course_drop(char* subjectRem, int courseNumRem)
 				iter->prev->next = NULL;
 				totalCredits = totalCredits - iter->credits;
 				free(iter);
+				iter = NULL;
 				return;
 			}
 
 			iter->prev->next = iter->next;
 			iter->next->prev = iter->prev;
-			totalCredits = totalCredits + iter->credits;
+			totalCredits = totalCredits - iter->credits;
 			free(iter);
+			iter = NULL;
 			return;
 		}
 
@@ -351,26 +334,7 @@ void schedule_save()
 	{
 		fprintf(file, "%d,%d,%d,%s\n", iter->subject, iter->number, iter->credits, iter->teachers);
 		//Deallocates nodes
-		if(iter->subject == 0)
-		{
-			char subject[MAX_LEN] = "CSE";
-			course_drop(subject, iter->number);
-		}
-		else if(iter->subject == 1)
-		{
-			char subject[MAX_LEN] = "EEE";
-			course_drop(subject, iter->number);
-		}
-		else if(iter->subject == 2)
-		{
-			char subject[MAX_LEN] = "EGR";
-			course_drop(subject, iter->number);
-		}
-		else if(iter->subject == 3)
-		{
-			char subject[MAX_LEN] = "SER";
-			course_drop(subject, iter->number);
-		}
+		course_drop(iter->subject, iter->number);
 
 		iter = iter->next;
 	}
