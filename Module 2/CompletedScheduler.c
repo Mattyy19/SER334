@@ -263,12 +263,13 @@ void course_drop(char* subjectRem, int courseNumRem)
 				course_collection = NULL;
 				totalCredits = totalCredits - iter->credits;
 				free(iter);
+
 				return;
 			}
 			//If course is the head
 			if(iter->prev == NULL)
 			{
-				course_collection = iter->next;
+				course_collection = course_collection->next;
 				course_collection->prev = NULL;
 				totalCredits = totalCredits - iter->credits;
 				free(iter);
