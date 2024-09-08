@@ -38,6 +38,7 @@ struct courseNode
 
 //place to store course information
 struct courseNode* course_collection = NULL;
+//Counts total credits
 int totalCredits = 0;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -45,7 +46,7 @@ int totalCredits = 0;
 void branching(char option);
 void course_insert(int subjectNum, int courseNum, int courseCreds, char* teacher);
 void schedule_print();
-void course_drop();
+void course_drop(char* subjectRem, int courseNumRem);
 void schedule_load();
 void schedule_save();
 
@@ -318,7 +319,7 @@ void schedule_load()
 		char teacher[MAX_LEN];
 
 		//Removes \n at at of string
-		size_t length = strlen(data);
+		int length = strlen(data);
 		if(length > 0 && data[length-1] == '\n')
 		{
 			data[length-1] = '\0';
