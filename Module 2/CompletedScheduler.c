@@ -298,7 +298,6 @@ void course_drop(char* subjectRem, int courseNumRem)
 
 }
 
-//TODO
 //Loads schedule from data.txt file
 void schedule_load()
 {
@@ -325,7 +324,7 @@ void schedule_load()
 			data[length-1] = '\0';
 		}
 		//Gets line of course
-		scanf(data, "%d,%d,%d,%s", &subject, &courseNum, &credits, teacher);
+		sscanf(data, "%d,%d,%d,%s", &subject, &courseNum, &credits, teacher);
 		//Adds to course_collection
 		course_insert(subject, courseNum, credits, teacher);
 	}
