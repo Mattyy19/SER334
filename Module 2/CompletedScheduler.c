@@ -201,6 +201,8 @@ void course_insert(int subjectNum, int courseNum, int courseCreds, char* teacher
 	}
 }
 
+
+//TODO
 //Displays all courses in course_collection
 void schedule_print()
 {
