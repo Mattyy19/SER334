@@ -201,8 +201,6 @@ void course_insert(int subjectNum, int courseNum, int courseCreds, char* teacher
 	}
 }
 
-
-//TODO
 //Displays all courses in course_collection
 void schedule_print()
 {
@@ -299,6 +297,7 @@ void course_drop(char* subjectRem, int courseNumRem)
 
 }
 
+//TODO
 //Loads schedule from data.txt file
 void schedule_load()
 {
