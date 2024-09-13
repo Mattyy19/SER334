@@ -73,6 +73,24 @@ build CMakeFiles/SER334.dir/Module_2/CompletedScheduler.c.o: C_COMPILER__SER334_
   OBJECT_DIR = CMakeFiles/SER334.dir
   OBJECT_FILE_DIR = CMakeFiles/SER334.dir/Module_2
 
+build CMakeFiles/SER334.dir/Module_3/BMPHandler.c.o: C_COMPILER__SER334_unscanned_Debug /home/matthew/CLionProjects/SER334/Module$ 3/BMPHandler.c || cmake_object_order_depends_target_SER334
+  DEP_FILE = CMakeFiles/SER334.dir/Module_3/BMPHandler.c.o.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/SER334.dir
+  OBJECT_FILE_DIR = CMakeFiles/SER334.dir/Module_3
+
+build CMakeFiles/SER334.dir/Module_3/Image.c.o: C_COMPILER__SER334_unscanned_Debug /home/matthew/CLionProjects/SER334/Module$ 3/Image.c || cmake_object_order_depends_target_SER334
+  DEP_FILE = CMakeFiles/SER334.dir/Module_3/Image.c.o.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/SER334.dir
+  OBJECT_FILE_DIR = CMakeFiles/SER334.dir/Module_3
+
+build CMakeFiles/SER334.dir/Module_3/NguyenImageProcessor.c.o: C_COMPILER__SER334_unscanned_Debug /home/matthew/CLionProjects/SER334/Module$ 3/NguyenImageProcessor.c || cmake_object_order_depends_target_SER334
+  DEP_FILE = CMakeFiles/SER334.dir/Module_3/NguyenImageProcessor.c.o.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/SER334.dir
+  OBJECT_FILE_DIR = CMakeFiles/SER334.dir/Module_3
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target SER334
@@ -81,7 +99,7 @@ build CMakeFiles/SER334.dir/Module_2/CompletedScheduler.c.o: C_COMPILER__SER334_
 #############################################
 # Link the executable SER334
 
-build SER334: C_EXECUTABLE_LINKER__SER334_Debug CMakeFiles/SER334.dir/Module_1/NguyenCollatz.c.o CMakeFiles/SER334.dir/Module_1/NguyenComputation.c.o CMakeFiles/SER334.dir/Module_1/NguyenDecrypt.c.o CMakeFiles/SER334.dir/Module_2/CompletedScheduler.c.o
+build SER334: C_EXECUTABLE_LINKER__SER334_Debug CMakeFiles/SER334.dir/Module_1/NguyenCollatz.c.o CMakeFiles/SER334.dir/Module_1/NguyenComputation.c.o CMakeFiles/SER334.dir/Module_1/NguyenDecrypt.c.o CMakeFiles/SER334.dir/Module_2/CompletedScheduler.c.o CMakeFiles/SER334.dir/Module_3/BMPHandler.c.o CMakeFiles/SER334.dir/Module_3/Image.c.o CMakeFiles/SER334.dir/Module_3/NguyenImageProcessor.c.o
   FLAGS = -g
   OBJECT_DIR = CMakeFiles/SER334.dir
   POST_BUILD = :

@@ -1,7 +1,7 @@
 ﻿/**
 * Specification for an image ADT.
 *
-* Completion time: ?
+* Completion time: 5 minutes
 *
 * @author Matthew Nguyen, Ruben Acuna
 * @version 9/9/2021
@@ -26,7 +26,7 @@ struct Image {
 };
 
 struct Pixel{
-	int red;
+ int red;
  int green;
  int blue;
 };
