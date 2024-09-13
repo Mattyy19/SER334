@@ -7,4 +7,5 @@ add_executable(SER334
     "Module 1/NguyenCollatz.c"
     "Module 1/NguyenComputation.c"
     "Module 1/NguyenDecrypt.c"
-        "Module 2/CompletedScheduler.c")
+        "Module 2/CompletedScheduler.c"
+        "Module 3/BMPHandler.h")
