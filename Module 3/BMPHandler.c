@@ -1,7 +1,7 @@
 /**
 * Implementation of several functions to manipulate BMP files.
 *
-* Completion time: 2 hours
+* Completion time: 6 hours
 *
 * @author Matthew Nguyen
 * @version 1.0
@@ -82,9 +82,9 @@ void makeBMPHeader(struct BMP_Header* header, int width, int height)
  header->signature[0] = 'B';
  header->signature[1] = 'M';
 
- //Image size
- int row = ((width * 3) + 3) & ~3;
- int size = row * height;
+ //Row padding for array
+ int padding = (4 - (width * 3) % 4) % 4;
+ int size = padding * height;
  header->size = size + 54;
 
  //Reserved 1 and 2
@@ -113,9 +113,9 @@ void makeDIBHeader(struct DIB_Header* header, int width, int height)
  //Compression
  header->compression = 0;
 
- //Image size
- int row = ((width * 3) + 3) & ~3;
- int size = row * height;
+ //Row padding for array
+ int padding = (4 - (width * 3) % 4) % 4;
+ int size = padding * height;
  header->imageSize = size;
 
  //Resolution
@@ -131,58 +131,48 @@ void makeDIBHeader(struct DIB_Header* header, int width, int height)
 
 void readPixelsBMP(FILE* file, struct Pixel** pArr, int width, int height)
 {
- //Row size
- int size = ((width * 3) + 3) & ~3;
+ //Finds pixel array
+ fseek(file, 54, SEEK_SET);
 
- unsigned char* row = malloc(sizeof(size));
+ //Row padding for array
+ int padding = (4 - (width * 3) % 4) % 4;
 
- //Loop to read through array
- int i;
- for(i = height - 1; i >= 0; i--)
- {
-  //Read from row and store in pixel array
-  fread(row, sizeof(unsigned char), size, file);
-  int j;
+ int i, j;
+ for (i = height-1; i >= 0; i--) {
   for(j = 0; j < width; j++)
   {
-   pArr[i][j].blue = row[j * 3];
-   pArr[i][j].green = row[(j * 3) + 1];
-   pArr[i][j].red = row[(j * 3) + 2];
+   //Store pixel data in pixel array
+   struct Pixel* temp = &pArr[i][j];
+   fread(&temp->blue, sizeof(char), 1, file);
+   fread(&temp->green, sizeof(char), 1, file);
+   fread(&temp->red, sizeof(char), 1, file);
+   //printf("R = %d G = %d B = %d\n", temp->red, temp->green, temp->blue); //for testing
   }
+  //Skip paddding
+  fseek(file, padding, SEEK_CUR);
  }
 
- free(row);
 }
 
 void writePixelsBMP(FILE* file, struct Pixel** pArr, int width, int height)
 {
- //Row size
- int size = ((width * 3) + 3) & ~3;
+ //Finds pixel array
+ fseek(file, 54, SEEK_SET);
 
- unsigned char* row = malloc(sizeof(size));
+ //Row padding for pixel array
+ int padding = (4 - (width * 3) % 4) % 4;
 
- //Loop to read through array
- int i;
- for(i = height - 1; i >= 0; i--)
+ int i, j;
+ for (i = height-1; i >= 0; i--)
  {
-  int j;
   for(j = 0; j < width; j++)
   {
-   row[j * 3] = pArr[i][j].blue;
-   row[(j * 3) + 1] = pArr[i][j].green;
-   row[(j * 3) + 2] = pArr[i][j].red;
+   struct Pixel* temp = &pArr[i][j];
+   fwrite(&temp->blue, sizeof(char), 1, file);
+   fwrite(&temp->green, sizeof(char), 1, file);
+   fwrite(&temp->red, sizeof(char), 1, file);
   }
-
-  //If row not padded
-  int k;
-  for(k = width * 3; k < size; k++)
-  {
-   row[k] = 0;
-  }
-
-  //Write from pixel array
-  fwrite(row, sizeof(unsigned char), size, file);
+  //Skip paddding
+  fseek(file, padding, SEEK_CUR);
  }
-
- free(row);
 }
