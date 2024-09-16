@@ -13,7 +13,7 @@
 
 Image* image_create(struct Pixel** pArr, int width, int height)
 {
- Image* newImage = malloc(sizeof(Image));
+ Image* newImage = (struct Image*)malloc(sizeof(Image));
  newImage->pArr = pArr;
  newImage->width = width;
  newImage->height = height;
@@ -51,17 +51,17 @@ int image_get_height(Image* img)
 void image_apply_bw(Image* img)
 {
  int i, j;
- unsigned char grey;
+ unsigned char gray;
  for(i = image_get_height(img) - 1; i >= 0; i--)
  {
   for(j = 0; j < image_get_width(img); j++)
   {
    struct Pixel* temp = &image_get_pixels(img)[i][j];
 
-   grey = (unsigned char)((0.299 * temp->red) + (0.587 * temp->green) + (0.114 * temp->blue));
-   temp->red = grey;
-   temp->green = grey;
-   temp->blue = grey;
+   gray = (unsigned char)((0.299 * temp->red) + (0.587 * temp->green) + (0.114 * temp->blue));
+   temp->red = gray;
+   temp->green = gray;
+   temp->blue = gray;
   }
  }
 }
@@ -125,7 +125,7 @@ void image_apply_resize(Image* img, float factor)
  //New pixel array
  struct Pixel** newpArr = (struct Pixel**)malloc(newHeight * sizeof(struct Pixel*));
  for (int i = 0; i < newHeight; i++) {
-  newpArr[i] = (struct Pixel*)malloc(newWidth * sizeof(struct Pixel));
+  newpArr[i] = (struct Pixel*)malloc(sizeof(struct Pixel) * newWidth);
  }
 
  int i, j;

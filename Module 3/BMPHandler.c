@@ -84,7 +84,8 @@ void makeBMPHeader(struct BMP_Header* header, int width, int height)
 
  //Row padding for array
  int padding = (4 - (width * 3) % 4) % 4;
- int size = padding * height;
+ width = width + padding;
+ int size = width * height;
  header->size = size + 54;
 
  //Reserved 1 and 2
@@ -115,7 +116,8 @@ void makeDIBHeader(struct DIB_Header* header, int width, int height)
 
  //Row padding for array
  int padding = (4 - (width * 3) % 4) % 4;
- int size = padding * height;
+ width = width + padding;
+ int size = width * height;
  header->imageSize = size;
 
  //Resolution
@@ -135,7 +137,7 @@ void readPixelsBMP(FILE* file, struct Pixel** pArr, int width, int height)
  fseek(file, 54, SEEK_SET);
 
  //Row padding for array
- int padding = (4 - (width * 3) % 4) % 4;
+ int padding = ((4 - (width * 3) % 4) % 4);
 
  int i, j;
  for (i = height-1; i >= 0; i--) {
