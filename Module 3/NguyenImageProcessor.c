@@ -97,11 +97,15 @@ int main()
                 hasGrayFilter = 1;
             }
 
-            //Shift red
+            ///Shift red
             if(strcmp(token, "-r") == 0)
             {
                 token = strtok(NULL, " ");
                 sscanf(token, "%d", &rShift);
+                if(rShift == 0)
+                {
+                    printf("-r has an invalid shift\n");
+                }
             }
 
             //Shift green
@@ -109,6 +113,10 @@ int main()
             {
                 token = strtok(NULL, " ");
                 sscanf(token, "%d", &gShift);
+                if(gShift == 0)
+                {
+                    printf("-g has an invalid shift\n");
+                }
             }
 
             //Shift blue
@@ -116,6 +124,10 @@ int main()
             {
                 token = strtok(NULL, " ");
                 sscanf(token, "%d", &bShift);
+                if(bShift == 0)
+                {
+                    printf("-b has an invalid shift\n");
+                }
             }
 
             if(strcmp(token, "-s") == 0)
