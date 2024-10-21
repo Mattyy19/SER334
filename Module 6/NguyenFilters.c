@@ -1,7 +1,7 @@
 /**
 * Takes user input to alter BMP files based on their commands
 *
-* Completion time: 30 min
+* Completion time: 1 hour
 *
 * @author Matthew Nguyen
 * @version 1.0
@@ -15,7 +15,7 @@
 #include <pthread.h>
 #include <math.h>
 #include "BMPHandler.h"
-#include "Image.h"
+#include "PixelProcessor.h"
 //TODO: finish me
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -27,35 +27,43 @@
 #define MAXIMUM_IMAGE_SIZE 4096
 
 //TODO: finish me
-
+#define THREAD_COUNT 4
 
 ////////////////////////////////////////////////////////////////////////////////
 //DATA STRUCTURES
 
 //TODO: finish me
+struct Pixel** pArr;
 
 
 ////////////////////////////////////////////////////////////////////////////////
 //MAIN PROGRAM CODE
 
 //TODO: finish me
+void* boxBlur(void* data)
+{
+	return data;
+}
+
+void* cheese(void* data)
+{
+	return data;
+}
 
 
 void main(int argc, char* argv[]) {
 	//TODO: finish me
+	pthread_t tids[THREAD_COUNT];
 	//For BMP file
 	struct BMP_Header* bmpHeader = (struct BMP_Header*)malloc(sizeof(struct BMP_Header));
 	struct DIB_Header* dibHeader = (struct DIB_Header*)malloc(sizeof(struct DIB_Header));
-	struct Image* image = (struct Image*)malloc(sizeof(struct Image));
 	FILE* file;
-	struct Pixel** pArr;
 
 	//For inputs
 	char fileName[1024];
 	char outputName[1024];
 	char filterType[1024];
 	int hasOutputName = 0;
-	int hasFilter = 0;
 
 	//Opens BMP file
 	if(strcmp(argv[0], "./NguyenFilters -i") == 0)
@@ -82,7 +90,6 @@ void main(int argc, char* argv[]) {
 		}
 
 		readPixelsBMP(file, pArr, dibHeader->imageWidth, dibHeader->imageHeight);
-		image = image_create(pArr, dibHeader->imageWidth, dibHeader->imageHeight);
 
 		fclose(file);
 	}
@@ -102,7 +109,6 @@ void main(int argc, char* argv[]) {
 		if(strcmp(argv[i], "-f") == 0)
 		{
 			strcpy(filterType, argv[i + 1]);
-			hasFilter = 1;
 		}
 	}
 
@@ -126,12 +132,11 @@ void main(int argc, char* argv[]) {
 		//Writes to BMP file
 		writeBMPHeader(fileOut, bmpHeader);
 		writeDIBHeader(fileOut, dibHeader);
-		writePixelsBMP(fileOut, image_get_pixels(image), dibHeader->imageWidth, dibHeader->imageHeight);
+		writePixelsBMP(fileOut, pArr, dibHeader->imageWidth, dibHeader->imageHeight);
 		fclose(fileOut);
 	}
 
 	free(bmpHeader);
 	free(dibHeader);
 	free(pArr);
-	image_destroy(&image);
 }
