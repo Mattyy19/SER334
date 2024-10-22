@@ -45,11 +45,11 @@ struct thread_info
 ////////////////////////////////////////////////////////////////////////////////
 //MAIN PROGRAM CODE
 
-//TODO: Add blurs for edges of width
 //Applies box blur
 void* boxBlur(void* data)
 {
 	struct thread_info* info = (struct thread_info*)data;
+	struct thread_info* newInfo = (struct thread_info*)info;
 	int i, j;
 	for(i = info->height - 1; i >= 0; i--)
 	{
@@ -172,6 +172,70 @@ void* boxBlur(void* data)
 				totalGreen = totalGreen / 6;
 				totalBlue = totalBlue / 6;
 			}
+			//Left side
+			else if(i != (info->height - 1) && i != 0 && j == 0)
+			{
+				struct Pixel temp1 = info->pixels[i][j+1];
+				totalRed += temp1.red;
+				totalGreen += temp1.green;
+				totalBlue += temp1.blue;
+
+				temp1 = info->pixels[i-1][j+1];
+				totalRed += temp1.red;
+				totalGreen += temp1.green;
+				totalBlue += temp1.blue;
+
+				temp1 = info->pixels[i+1][j+1];
+				totalRed += temp1.red;
+				totalGreen += temp1.green;
+				totalBlue += temp1.blue;
+
+				temp1 = info->pixels[i+1][j];
+				totalRed += temp1.red;
+				totalGreen += temp1.green;
+				totalBlue += temp1.blue;
+
+				temp1 = info->pixels[i-1][j];
+				totalRed += temp1.red;
+				totalGreen += temp1.green;
+				totalBlue += temp1.blue;
+
+				totalRed = totalRed / 6;
+				totalGreen = totalGreen / 6;
+				totalBlue = totalBlue / 6;
+			}
+			//Right side
+			else if(i != (info->height - 1) && i != 0 && j == (info->width - 1))
+			{
+				struct Pixel temp1 = info->pixels[i][j-1];
+				totalRed += temp1.red;
+				totalGreen += temp1.green;
+				totalBlue += temp1.blue;
+
+				temp1 = info->pixels[i-1][j-1];
+				totalRed += temp1.red;
+				totalGreen += temp1.green;
+				totalBlue += temp1.blue;
+
+				temp1 = info->pixels[i+1][j-1];
+				totalRed += temp1.red;
+				totalGreen += temp1.green;
+				totalBlue += temp1.blue;
+
+				temp1 = info->pixels[i+1][j];
+				totalRed += temp1.red;
+				totalGreen += temp1.green;
+				totalBlue += temp1.blue;
+
+				temp1 = info->pixels[i-1][j];
+				totalRed += temp1.red;
+				totalGreen += temp1.green;
+				totalBlue += temp1.blue;
+
+				totalRed = totalRed / 6;
+				totalGreen = totalGreen / 6;
+				totalBlue = totalBlue / 6;
+			}
 			//Top left corner
 			else if(i == (info->height - 1) && j == 0)
 			{
@@ -261,11 +325,14 @@ void* boxBlur(void* data)
 				totalBlue = totalBlue / 4;
 			}
 
-			info->pixels[i][j].red = totalRed;
-			info->pixels[i][j].green = totalGreen;
-			info->pixels[i][j].blue= totalBlue;
+			newInfo->pixels[i][j].red = totalRed;
+			newInfo->pixels[i][j].green = totalGreen;
+			newInfo->pixels[i][j].blue= totalBlue;
 		}
 	}
+
+	info = newInfo;
+
 	return info;
 }
 
